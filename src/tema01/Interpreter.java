@@ -121,6 +121,7 @@ public class Interpreter {
 			//System.out.println("Total" + ++ejecutadas);
 			numCasos--;
 		}
+		
 		scan.close();
 	}
 }
