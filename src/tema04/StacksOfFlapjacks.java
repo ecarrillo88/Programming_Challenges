@@ -17,6 +17,7 @@ public class StacksOfFlapjacks {
 			int aux = a[i];
 			a[i] = a[k];
 			a[k] = aux;
+			
 		}
 	}
 	
