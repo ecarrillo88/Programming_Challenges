@@ -177,6 +177,7 @@ public class LCD_Display {
 			//if (cont > 1) {
 				//System.out.print("\n");
 			//}
+			
 			imprimirLCD();
 			System.out.print("\n");
 			//cont++;
