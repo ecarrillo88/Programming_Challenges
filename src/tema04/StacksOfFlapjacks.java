@@ -6,6 +6,7 @@ public class StacksOfFlapjacks {
 	private static int[] stack;
 
 	// Algoritmo basado en SELECTION SORT O(n^2)
+	
 	private static void voltearTortitas() {
 		int fin = stack.length - 1;
 		while (!estaOrdenado()) {
