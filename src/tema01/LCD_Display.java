@@ -1,3 +1,9 @@
+/*
+ * PC/UVA IDs: 110104/706
+ * PC: Wrong Answer / UVA: Time Limit Exceeded
+ * Run Time: ?
+ */
+
 package tema01;
 
 import java.util.Scanner;
