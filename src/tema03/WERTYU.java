@@ -1,3 +1,9 @@
+/*
+ * PC/UVA IDs: 110301/10082
+ * PC: Accepted / UVA: Accepted
+ * Run Time: 0.169
+ */
+
 package tema03;
 
 import java.util.Scanner;
