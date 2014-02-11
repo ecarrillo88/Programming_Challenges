@@ -1,3 +1,9 @@
+/*
+ * PC/UVA IDs: 110402/120
+ * PC: Wrong Answer / UVA: Accepted.
+ * Run Time: 0.798
+ */
+
 package tema04;
 
 import java.util.ArrayList;
