@@ -1,3 +1,9 @@
+/*
+ * PC/UVA IDs: 110106/10033
+ * PC: ? / UVA: ?
+ * Run Time: ?
+ */
+
 package tema01;
 
 import java.util.Scanner;
