@@ -1,27 +1,27 @@
 /*
  * PC/UVA IDs: 110303/10252
- * PC: ? / UVA: ?
- * Run Time: ?
+ * PC: Accepted / UVA: Accepted
+ * Run Time: 0.355
  */
 
 package tema03;
+
 
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class CommonPermutation {
 
-	private static String buscarCadena(char[] a, char[] b) {
+	private static String buscarCoincidencias(char[] a, char[] b) {
 		String cadena = "";
-		int i = 0, j = 0;
-		int menor = Math.min(a.length, b.length);
-		while (true) {
-			if (a[i] == b[j]) {
-				cadena += a[i];
-				i++;
-				j++;
-			} else{
-				i++;
+		int k = 0;
+		for (int i = 0; i < a.length; i++) {
+			for (int j = k; j < b.length; j++) {
+				if (a[i] == b[j]) {
+					cadena += a[i];
+					k = j + 1;
+					break;
+				}
 			}
 		}
 		return cadena;
@@ -34,13 +34,13 @@ public class CommonPermutation {
 		while (scan.hasNext()) {
 			a = scan.nextLine().toCharArray();
 			b = scan.nextLine().toCharArray();
+			// Ordenamos los arrays para facilitar la busqueda
 			Arrays.sort(a);
 			Arrays.sort(b);
-			System.out.println(buscarCadena(a, b).trim());
+			System.out.println(buscarCoincidencias(a, b));
 		}
 
 		scan.close();
-
 	}
 
 }
