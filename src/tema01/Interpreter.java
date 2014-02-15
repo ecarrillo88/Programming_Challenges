@@ -1,11 +1,15 @@
 /*
  * PC/UVA IDs: 110106/10033
- * PC: ? / UVA: ?
+ * PC: Wrong Answer / UVA: Wrong Answer
  * Run Time: ?
  */
 
 package tema01;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class Interpreter {
@@ -13,15 +17,28 @@ public class Interpreter {
 	private static int[] RAM = new int[1000];
 	private static int posRAM = 0;
 
+	private static String ReadLine() {
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		try {
+			return in.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	private static void cargarRAM(Scanner scan) {
 		posRAM = 0;
 		int nInstrucciones = 0;
 		String instruccion;
-		while ((instruccion = scan.nextLine()) != null
-				&& !instruccion.equals("")) {
-			RAM[nInstrucciones++] = Integer.parseInt(instruccion.trim());
+		while (scan.hasNextLine()) {
+			instruccion = scan.nextLine();
+			if (!instruccion.equals("")) {
+				RAM[nInstrucciones++] = Integer.parseInt(instruccion);
+			} else {
+				break;
+			}
 		}
-
 	}
 
 	private static void inicializarRegistroConValor(int d, int n) {
@@ -62,63 +79,65 @@ public class Interpreter {
 		}
 	}
 
-	private static void imprimirRegistros() {
-		for (int i = 0; i < registros.length; i++)
-			System.out.print(registros[i] + "|");
-		System.out.println();
+	private static int iniciarEjecucion() {
+		int instruccion, digito1, digito2, digito3, ejecutadas = 0;
+		while (posRAM < RAM.length) {
+			instruccion = RAM[posRAM++];
+			digito1 = instruccion / 100;
+			digito2 = (instruccion / 10) % 10;
+			digito3 = instruccion % 10;
+			switch (digito1) {
+			case 1:
+				if (instruccion == 100) {
+					return ++ejecutadas;
+				}
+				break;
+			case 2:
+				inicializarRegistroConValor(digito2, digito3);
+				break;
+			case 3:
+				sumarValor(digito2, digito3);
+				break;
+			case 4:
+				multiplicarPorValor(digito2, digito3);
+				break;
+			case 5:
+				inicializarRegistroConRegistro(digito2, digito3);
+				break;
+			case 6:
+				sumarRegistro(digito2, digito3);
+				break;
+			case 7:
+				multiplicarPorRegistro(digito2, digito3);
+				break;
+			case 8:
+				inicializarRegistroConRAM(digito2, digito3);
+				break;
+			case 9:
+				inicializarRAMConRegistro(digito2, digito3);
+				break;
+			case 0:
+				goTo(digito2, digito3);
+			}
+			ejecutadas++;
+		}
+		return ejecutadas;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		Scanner scan = new Scanner(System.in);
 		int numCasos = scan.nextInt();
-		// Necesario para saltarnos la linea en blanco inicial
+		// Linea en blanco
 		scan.nextLine();
 		scan.nextLine();
 
 		while (numCasos > 0) {
 			cargarRAM(scan);
-
-			int ejecutadas = 0;
-			while (RAM[posRAM++] != 100) {
-				int inst = RAM[posRAM - 1];
-				int digito1 = inst / 100;
-				int digito2 = (inst / 10) % 10;
-				int digito3 = inst % 10;
-				switch (digito1) {
-				case 2:
-					inicializarRegistroConValor(digito2, digito3);
-					break;
-				case 3:
-					sumarValor(digito2, digito3);
-					break;
-				case 4:
-					multiplicarPorValor(digito2, digito3);
-					break;
-				case 5:
-					inicializarRegistroConRegistro(digito2, digito3);
-					break;
-				case 6:
-					sumarRegistro(digito2, digito3);
-					break;
-				case 7:
-					multiplicarPorRegistro(digito2, digito3);
-					break;
-				case 8:
-					inicializarRegistroConRAM(digito2, digito3);
-					break;
-				case 9:
-					inicializarRAMConRegistro(digito2, digito3);
-					break;
-				case 0:
-					goTo(digito2, digito3);
-				}
-				ejecutadas++;
+			System.out.println(iniciarEjecucion());
+			if (--numCasos > 0) {
+				System.out.print("\n");
 			}
-
-			System.out.println(++ejecutadas + "\n");
-			numCasos--;
 		}
-
 		scan.close();
 	}
 }
