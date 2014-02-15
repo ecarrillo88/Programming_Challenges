@@ -1,39 +1,24 @@
 /*
  * PC/UVA IDs: 110106/10033
- * PC: Wrong Answer / UVA: Wrong Answer
- * Run Time: ?
+ * PC: Accepted / UVA: Accepted
+ * Run Time: 0.198
  */
 
 package tema01;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class Interpreter {
-	private static int[] registros = new int[10];
-	private static int[] RAM = new int[1000];
-	private static int posRAM = 0;
-
-	private static String ReadLine() {
-		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		try {
-			return in.readLine();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+	private static int[] registros;
+	private static int[] RAM;
+	private static int pc;
 
 	private static void cargarRAM(Scanner scan) {
-		posRAM = 0;
 		int nInstrucciones = 0;
 		String instruccion;
 		while (scan.hasNextLine()) {
 			instruccion = scan.nextLine();
-			if (!instruccion.equals("")) {
+			if (instruccion.trim().length() != 0) {
 				RAM[nInstrucciones++] = Integer.parseInt(instruccion);
 			} else {
 				break;
@@ -75,21 +60,21 @@ public class Interpreter {
 
 	private static void goTo(int d, int s) {
 		if (registros[s] != 0) {
-			posRAM = registros[d];
+			pc = registros[d];
 		}
 	}
 
 	private static int iniciarEjecucion() {
-		int instruccion, digito1, digito2, digito3, ejecutadas = 0;
-		while (posRAM < RAM.length) {
-			instruccion = RAM[posRAM++];
+		int instruccion, digito1, digito2, digito3, contadorInstrucciones = 0;
+		while (pc < RAM.length) {
+			instruccion = RAM[pc++];
 			digito1 = instruccion / 100;
 			digito2 = (instruccion / 10) % 10;
 			digito3 = instruccion % 10;
 			switch (digito1) {
 			case 1:
 				if (instruccion == 100) {
-					return ++ejecutadas;
+					return ++contadorInstrucciones;
 				}
 				break;
 			case 2:
@@ -118,20 +103,24 @@ public class Interpreter {
 				break;
 			case 0:
 				goTo(digito2, digito3);
+				break;
 			}
-			ejecutadas++;
+			// Todas las instrucciones anteriores a la 100 (detener) cuentan como
+			// instrucciones, incluidas instrucciones no validas como 000 y 1XX
+			contadorInstrucciones++;
 		}
-		return ejecutadas;
+		return contadorInstrucciones;
 	}
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
-		int numCasos = scan.nextInt();
-		// Linea en blanco
-		scan.nextLine();
-		scan.nextLine();
+		int numCasos = Integer.parseInt(scan.nextLine());
+		scan.nextLine(); // Linea en blanco
 
 		while (numCasos > 0) {
+			registros = new int[10];
+			RAM = new int[1000];
+			pc = 0;
 			cargarRAM(scan);
 			System.out.println(iniciarEjecucion());
 			if (--numCasos > 0) {
