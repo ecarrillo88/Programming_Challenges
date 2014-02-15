@@ -12,10 +12,16 @@ public class Interpreter {
 	private static int[] registros = new int[10];
 	private static int[] RAM = new int[1000];
 	private static int posRAM = 0;
-	
-	private static void cargarRAM(){
+
+	private static void cargarRAM(Scanner scan) {
 		posRAM = 0;
-		
+		int nInstrucciones = 0;
+		String instruccion;
+		while ((instruccion = scan.nextLine()) != null
+				&& !instruccion.equals("")) {
+			RAM[nInstrucciones++] = Integer.parseInt(instruccion.trim());
+		}
+
 	}
 
 	private static void inicializarRegistroConValor(int d, int n) {
@@ -39,7 +45,7 @@ public class Interpreter {
 	}
 
 	private static void multiplicarPorRegistro(int d, int s) {
-		registros[d] = (registros[d] * registros[s]) * 1000;
+		registros[d] = (registros[d] * registros[s]) % 1000;
 	}
 
 	private static void inicializarRegistroConRAM(int d, int a) {
@@ -52,82 +58,67 @@ public class Interpreter {
 
 	private static void goTo(int d, int s) {
 		if (registros[s] != 0) {
-			posRAM = d;
+			posRAM = registros[d];
 		}
+	}
+
+	private static void imprimirRegistros() {
+		for (int i = 0; i < registros.length; i++)
+			System.out.print(registros[i] + "|");
+		System.out.println();
 	}
 
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
 		int numCasos = scan.nextInt();
-		String lb = scan.next(); // linea en blanco
+		// Necesario para saltarnos la linea en blanco inicial
+		scan.nextLine();
+		scan.nextLine();
 
 		while (numCasos > 0) {
+			cargarRAM(scan);
 
-			int nInstrucciones = 0;
-			String instruccion;
-			do {
-				instruccion = scan.nextLine();
-				try{
-				RAM[nInstrucciones] = Integer.parseInt(instruccion);
-				nInstrucciones++;
-				}catch(NumberFormatException e){
-					;
-				}
-			} while (!instruccion.equals(""));
-			
-			System.out.println("total: " + nInstrucciones);
-
-			posRAM = 0;
 			int ejecutadas = 0;
-			/*while (instruccion != 100) {
-				RAM[posRAM++] = instruccion;
-				String inst = instruccion + "";
-				switch (inst.charAt(0)) {
+			while (RAM[posRAM++] != 100) {
+				int inst = RAM[posRAM - 1];
+				int digito1 = inst / 100;
+				int digito2 = (inst / 10) % 10;
+				int digito3 = inst % 10;
+				switch (digito1) {
 				case 2:
-					inicializarRegistroConValor(inst.charAt(1), inst.charAt(2));
-					ejecutadas++;
+					inicializarRegistroConValor(digito2, digito3);
 					break;
 				case 3:
-					sumarValor(inst.charAt(1), inst.charAt(2));
-					ejecutadas++;
+					sumarValor(digito2, digito3);
 					break;
 				case 4:
-					multiplicarPorValor(inst.charAt(1), inst.charAt(2));
-					ejecutadas++;
+					multiplicarPorValor(digito2, digito3);
 					break;
 				case 5:
-					inicializarRegistroConRegistro(inst.charAt(1),
-							inst.charAt(2));
-					ejecutadas++;
+					inicializarRegistroConRegistro(digito2, digito3);
 					break;
 				case 6:
-					sumarRegistro(inst.charAt(1), inst.charAt(2));
-					ejecutadas++;
+					sumarRegistro(digito2, digito3);
 					break;
 				case 7:
-					multiplicarPorRegistro(inst.charAt(1), inst.charAt(2));
-					ejecutadas++;
+					multiplicarPorRegistro(digito2, digito3);
 					break;
 				case 8:
-					inicializarRegistroConRAM(inst.charAt(1), inst.charAt(2));
-					ejecutadas++;
+					inicializarRegistroConRAM(digito2, digito3);
 					break;
 				case 9:
-					inicializarRAMConRegistro(inst.charAt(1), inst.charAt(2));
-					ejecutadas++;
+					inicializarRAMConRegistro(digito2, digito3);
 					break;
 				case 0:
-					goTo(inst.charAt(1), inst.charAt(2));
-					ejecutadas++;
+					goTo(digito2, digito3);
 				}
-				instruccion = scan.nextInt();
+				ejecutadas++;
 			}
-			*/
 
-			//System.out.println("Total" + ++ejecutadas);
+			System.out.println(++ejecutadas + "\n");
 			numCasos--;
 		}
-		
+
 		scan.close();
 	}
 }
