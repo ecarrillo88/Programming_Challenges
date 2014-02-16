@@ -35,24 +35,36 @@ public class AustralianVoting {
 			}
 		}
 
-		int resultado = candidatoGanador(numVotos);
-		if (resultado != -1) {
-			return resultado;
-		} else {
-			eliminarCandidatosConMenosVotos();
+		int ganador = ganador(numVotos);
+		if (ganador != -1) {
+			return ganador;
 		}
 
-		return 0;
+		int votoAnterior, votoSiguiente;
+		for (int j = 0; j < candidatos.length; j++) {
+			for (int i = 0; i < numVotos; i++) {
+				votoAnterior = votos[i][j];
+				if (candidatos[votoAnterior].eliminado) {
+					votoSiguiente = votos[i][j + 1];
+					if (!candidatos[votoSiguiente].eliminado) {
+						candidatos[votoSiguiente].votos++;
+					}
+				}
+			}
+			eliminarCandidatosConMenosVotos();
+		}
+		return -1;
 	}
 
-	// Si algun candidato tiene mas de 50% de votos retorna su posicion en el
-	// array, sino retorna -1
-	private static int candidatoGanador(int numVotos) {
+	// Comprueba si algun candidato tiene mas de 50% de votos
+	private static int ganador(int numVotos) {
 		float porcentajeVotos;
 		for (int i = 1; i < candidatos.length; i++) {
-			porcentajeVotos = candidatos[i].votos / (float) numVotos;
-			if (porcentajeVotos > 0.5) {
-				return i;
+			if (!candidatos[i].eliminado) {
+				porcentajeVotos = candidatos[i].votos / (float) numVotos;
+				if (porcentajeVotos > 0.5) {
+					return i;
+				}
 			}
 		}
 		return -1;
@@ -62,7 +74,7 @@ public class AustralianVoting {
 		// Buscamos el minimo de votos entre los candidatos
 		int minVotos = Integer.MAX_VALUE;
 		for (int i = 0; i < candidatos.length; i++) {
-			if (candidatos[i].votos < minVotos) {
+			if (!candidatos[i].eliminado && candidatos[i].votos < minVotos) {
 				minVotos = candidatos[i].votos;
 			}
 		}
@@ -106,7 +118,12 @@ public class AustralianVoting {
 				}
 			}
 
-			// Falta codigo
+			int resultado = recuentoVotos(numVotos);
+			if (resultado != -1) {
+				System.out.println(candidatos[resultado].nombre);
+			} else {
+				imprimirArray();
+			}
 
 			if (--numCasos > 0) {
 				System.out.print("\n");
