@@ -15,12 +15,11 @@ public class AustralianVoting {
 	private static final int NUM_VOTOS = 1001;
 
 	// Metodo para testeo
-	private static void imprimirArray() {
-		for (int i = 1; i < 10; i++) {
-			for (int j = 1; j < candidatos.length; j++) {
-				System.out.print(votos[i][j] + "|");
-			}
-			System.out.println();
+	private static void imprimirGanadores() {
+		for (int i = 1; i < candidatos.length; i++) {
+			Candidato candidato = candidatos[i];
+			if (!candidato.eliminado)
+				System.out.println(candidato.nombre);
 		}
 	}
 
@@ -35,25 +34,30 @@ public class AustralianVoting {
 			}
 		}
 
+		// Comprobamos si hay ganador en la primera ronda y lo retornamos
 		int ganador = ganador(numVotos);
 		if (ganador != -1) {
 			return ganador;
 		}
 
-		int votoAnterior, votoSiguiente;
-		for (int j = 0; j < candidatos.length; j++) {
-			for (int i = 0; i < numVotos; i++) {
-				votoAnterior = votos[i][j];
-				if (candidatos[votoAnterior].eliminado) {
-					votoSiguiente = votos[i][j + 1];
-					if (!candidatos[votoSiguiente].eliminado) {
-						candidatos[votoSiguiente].votos++;
+		int primeraOpcion;
+		for (int i = 0; i < numVotos; i++) {
+			primeraOpcion = votos[i][0];
+			if (!candidatos[primeraOpcion].eliminado) {
+				continue;
+			} else {
+				for (int j = 1; j < candidatos.length; j++) {
+					if (!candidatos[votos[i][j]].eliminado) {
+						candidatos[votos[i][j]].votos++;
+					} else {
+						break;
 					}
 				}
 			}
 			eliminarCandidatosConMenosVotos();
 		}
-		return -1;
+
+		return -1; // No ha habido un solo ganador
 	}
 
 	// Comprueba si algun candidato tiene mas de 50% de votos
@@ -120,9 +124,9 @@ public class AustralianVoting {
 
 			int resultado = recuentoVotos(numVotos);
 			if (resultado != -1) {
-				System.out.println(candidatos[resultado].nombre);
+				System.out.println(candidatos[resultado].nombre); // Hay ganador
 			} else {
-				imprimirArray();
+				imprimirGanadores(); // Hay empate
 			}
 
 			if (--numCasos > 0) {
