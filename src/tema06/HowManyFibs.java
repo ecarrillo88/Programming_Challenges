@@ -8,34 +8,22 @@ package tema06;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class HowManyFibs {
-	private static BigInteger[] arr;
+	private static ArrayList<BigInteger> fibonacci;
+	private static BigInteger diez100;
 
-	// hacer 2 y 3(facil) tema 6
-	private static void fibonacci() {
-		int num = 1, n2;
-		int n1 = num - 1;
-		System.out.println(0);
-		System.out.println(num);
-		for (int cantidad = 1; cantidad < 20; cantidad++) {
-			n2 = num + n1;
-			System.out.println(n2);
-			n1 = num;
-			num = n2;
-		}
-	}
+	public static void generarFibonacci() {
+		fibonacci.add(BigInteger.ZERO);
+		fibonacci.add(BigInteger.ONE);
 
-	public static void FibonacciIterativo(int n) {
-		arr[0] = BigInteger.ZERO;
-		for (int i = 1; i < n; i++) {
-			if (i < 2) {
-				arr[i] = BigInteger.ONE;
+		BigInteger fib = BigInteger.ONE;
+		while (fib.compareTo(diez100) <= 0) {
+			fibonacci.add(fibonacci.i);
+			fibonacci[i] = fibonacci[i - 1].add(fibonacci[i - 2]);
 
-			} else {
-				arr[i] = arr[i - 1].add(arr[i - 2]);
-			}
 		}
 	}
 
@@ -46,12 +34,15 @@ public class HowManyFibs {
 	}
 
 	public static void main(String[] args) {
+		Scanner entrada = new Scanner(System.in);
 		// 1 Y 100 CEROS
-		String num = "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
-		BigInteger diez100 = new BigInteger(num);
-		arr = new BigInteger[2000000];
-		FibonacciIterativo(2000000);
-		imprimir(2000000);
+		String MAX_VALOR = "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+		diez100 = new BigInteger(MAX_VALOR);
+
+		fibonacci = new ArrayList<BigInteger>();
+		generarFibonacci();
+		// imprimir(MAX_VALOR);
+		System.out.println("FIN");
 
 		/*
 		 * ArrayList<BigInteger> lista = new ArrayList<BigInteger>();
@@ -66,6 +57,6 @@ public class HowManyFibs {
 		 * 
 		 * }
 		 */
-
+		entrada.close();
 	}
 }
