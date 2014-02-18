@@ -1,7 +1,7 @@
 /*
  * PC/UVA IDs: 110108/10142
- * PC: ? / UVA: ?
- * Run Time: ?
+ * PC: Accepted / UVA: Accepted
+ * Run Time: 0.442
  */
 
 package tema01;
@@ -14,8 +14,7 @@ public class AustralianVoting {
 	private static int[][] votos;
 	private static final int NUM_VOTOS = 1001;
 
-	// Metodo para testeo
-	private static void imprimirGanadores() {
+	private static void imprimirCandidatosEmpatados() {
 		for (int i = 1; i < candidatos.length; i++) {
 			Candidato candidato = candidatos[i];
 			if (!candidato.eliminado)
@@ -23,41 +22,40 @@ public class AustralianVoting {
 		}
 	}
 
+	// Retorna el numero del candidato ganador o -1 en caso de empate
 	private static int recuentoVotos(int numVotos) {
-		int voto;
-		// Recuento primera opcion
-		for (int i = 0; i < numVotos; i++) {
-			voto = votos[i][0];
-			// La posicion de los candidatos coincide con su orden
-			if (!candidatos[voto].eliminado) {
-				candidatos[voto].votos++;
-			}
-		}
-
-		// Comprobamos si hay ganador en la primera ronda y lo retornamos
-		int ganador = ganador(numVotos);
-		if (ganador != -1) {
-			return ganador;
-		}
-
+		int ganador = -1; // Inicialmente no hay ganador
 		int primeraOpcion;
-		for (int i = 0; i < numVotos; i++) {
-			primeraOpcion = votos[i][0];
-			if (!candidatos[primeraOpcion].eliminado) {
-				continue;
-			} else {
-				for (int j = 1; j < candidatos.length; j++) {
-					if (!candidatos[votos[i][j]].eliminado) {
-						candidatos[votos[i][j]].votos++;
-					} else {
-						break;
+		do {
+			// Con cada nuevo recuento se eliminan los votos anteriores
+			eliminarVotos();
+			// Recuento de votos
+			for (int i = 0; i < numVotos; i++) {
+				primeraOpcion = votos[i][0];
+				if (candidatos[primeraOpcion].eliminado) {
+					for (int j = 1; j < candidatos.length; j++) {
+						if (!candidatos[votos[i][j]].eliminado) {
+							candidatos[votos[i][j]].votos++;
+							break;
+						}
 					}
+				} else {
+					candidatos[primeraOpcion].votos++;
 				}
 			}
-			eliminarCandidatosConMenosVotos();
-		}
+			ganador = ganador(numVotos);
+			// Mientras no haya ganador hay que eliminar a los menos votados y
+			// recontar los votos de nuevo
+		} while (ganador == -1 && eliminarCandidatosConMenosVotos());
 
-		return -1; // No ha habido un solo ganador
+		return ganador;
+	}
+
+	// Reinicia el contador de votos para los nuevos recuentos
+	private static void eliminarVotos() {
+		for (int i = 1; i < candidatos.length; i++) {
+			candidatos[i].votos = 0;
+		}
 	}
 
 	// Comprueba si algun candidato tiene mas de 50% de votos
@@ -67,28 +65,40 @@ public class AustralianVoting {
 			if (!candidatos[i].eliminado) {
 				porcentajeVotos = candidatos[i].votos / (float) numVotos;
 				if (porcentajeVotos > 0.5) {
-					return i;
+					return i; // Numero del ganador
 				}
 			}
 		}
-		return -1;
+		return -1; // No hay ganador
 	}
 
-	private static void eliminarCandidatosConMenosVotos() {
-		// Buscamos el minimo de votos entre los candidatos
+	private static boolean eliminarCandidatosConMenosVotos() {
+		int maxVotos = Integer.MIN_VALUE;
 		int minVotos = Integer.MAX_VALUE;
-		for (int i = 0; i < candidatos.length; i++) {
+		for (int i = 1; i < candidatos.length; i++) {
 			if (!candidatos[i].eliminado && candidatos[i].votos < minVotos) {
 				minVotos = candidatos[i].votos;
 			}
-		}
-
-		// El/los menos votados son "eliminados"
-		for (int i = 0; i < candidatos.length; i++) {
-			if (candidatos[i].votos == minVotos) {
-				candidatos[i].eliminado = true;
+			if (!candidatos[i].eliminado && candidatos[i].votos > maxVotos) {
+				maxVotos = candidatos[i].votos;
 			}
 		}
+
+		boolean hayEliminados = false;
+		// Solo se eliminan candidatos si existen candidatos con un numero de
+		// votos inferior al resto de candidatos. En caso de empate no se
+		// elimina ningun candidato
+		if (minVotos < maxVotos) {
+			// El/los menos votados son "eliminados"
+			for (int i = 1; i < candidatos.length; i++) {
+				if (candidatos[i].votos == minVotos) {
+					candidatos[i].eliminado = true;
+					hayEliminados = true;
+				}
+			}
+		}
+
+		return hayEliminados;
 	}
 
 	public static void main(String[] args) {
@@ -114,19 +124,21 @@ public class AustralianVoting {
 					StringTokenizer tokens = new StringTokenizer(linea);
 					for (int j = 0; tokens.hasMoreElements(); j++) {
 						votos[voto][j] = Integer.parseInt(tokens.nextToken());
-						numVotos++;
 					}
 					voto++;
 				} else {
+					// Cuando encontremos una linea en blanco se termina el
+					// almacenamiento de votos
 					break;
 				}
+				numVotos++;
 			}
 
 			int resultado = recuentoVotos(numVotos);
 			if (resultado != -1) {
 				System.out.println(candidatos[resultado].nombre); // Hay ganador
 			} else {
-				imprimirGanadores(); // Hay empate
+				imprimirCandidatosEmpatados(); // Hay empate
 			}
 
 			if (--numCasos > 0) {
