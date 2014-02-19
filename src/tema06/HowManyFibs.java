@@ -21,15 +21,15 @@ public class HowManyFibs {
 
 		BigInteger fib = BigInteger.ONE;
 		while (fib.compareTo(diez100) <= 0) {
-			fibonacci.add(fibonacci.i);
-			fibonacci[i] = fibonacci[i - 1].add(fibonacci[i - 2]);
+			//fibonacci.add(fibonacci.i);
+			//fibonacci[i] = fibonacci[i - 1].add(fibonacci[i - 2]);
 
 		}
 	}
 
 	private static void imprimir(int n) {
 		for (int i = 0; i < n; i++) {
-			System.out.println(arr[i]);
+			System.out.println(fibonacci.get(i));
 		}
 	}
 
