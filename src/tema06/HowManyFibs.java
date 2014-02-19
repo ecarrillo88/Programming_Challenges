@@ -1,7 +1,7 @@
 /*
  * PC/UVA IDs: 110601/10183
- * PC: ? / UVA: ?
- * Run Time: ?
+ * PC: Accepted / UVA: Accepted
+ * Run Time: 0.382
  */
 
 package tema06;
@@ -10,12 +10,13 @@ import java.math.BigInteger;
 import java.util.Scanner;
 
 public class HowManyFibs {
-	private static BigInteger[] fib = new BigInteger[100];
+	private static final int LENGTH = 500;
+	private static BigInteger[] fib = new BigInteger[LENGTH];
 
 	private static void generarFibonaccis() {
 		fib[1] = BigInteger.valueOf(1);
 		fib[2] = BigInteger.valueOf(2);
-		for (int i = 3; i < 100; i++) {
+		for (int i = 3; i < LENGTH; i++) {
 			fib[i] = fib[i - 1].add(fib[i - 2]);
 		}
 	}
@@ -32,7 +33,7 @@ public class HowManyFibs {
 			return 1;
 		}
 
-		for (int i = 1; i < 100; i++) {
+		for (int i = 1; i < LENGTH; i++) {
 			if (fib[i].compareTo(a) >= 0 && fib[i].compareTo(b) <= 0)
 				cont++;
 		}
