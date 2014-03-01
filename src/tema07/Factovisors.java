@@ -1,12 +1,13 @@
 /*
  * PC/UVA IDs: 110704/10139
- * PC: ? / UVA: Runtime Error
+ * PC: ? / UVA: ?
  * Run Time: ?
  */
 
 package tema07;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Factovisors {
 	private static long n;
@@ -43,8 +44,8 @@ public class Factovisors {
 	}
 
 	private static boolean esFactovisor(ArrayList<Long> listaFactores) {
-		int j = 1;
-		for (int i = 0; i < listaFactores.size(); i += j) {
+		int incremento = 1;
+		for (int i = 0; i < listaFactores.size(); i += incremento) {
 			long factor = listaFactores.get(i);
 			long divisor = factor;
 			int numFactorEnN = 0, exp = 2;
@@ -55,7 +56,7 @@ public class Factovisors {
 			}
 
 			int numFactorEnM = 0;
-			for (j = i; j < listaFactores.size(); j++) {
+			for (int j = i; j < listaFactores.size(); j++) {
 				if (listaFactores.get(i) != listaFactores.get(j)) {
 					break;
 				}
@@ -65,6 +66,7 @@ public class Factovisors {
 			if (numFactorEnM > numFactorEnN) {
 				return false;
 			}
+			incremento = numFactorEnM;
 		}
 		return true;
 	}
