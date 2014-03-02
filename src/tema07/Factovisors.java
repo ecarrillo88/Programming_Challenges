@@ -1,6 +1,6 @@
 /*
  * PC/UVA IDs: 110704/10139
- * PC: ? / UVA: ?
+ * PC: ? / UVA: Runtime Error
  * Run Time: ?
  */
 
@@ -77,7 +77,11 @@ public class Factovisors {
 			n = entrada.nextInt();
 			m = entrada.nextInt();
 
-			if (m != 0) {
+			if (m == 0) {
+				System.out.println(m + " does not divide " + n + "!");
+			} else if (n == m) {
+				System.out.println(m + " divides " + n + "!");
+			} else {
 				ArrayList<Long> listaFactores = new ArrayList<Long>();
 				listaFactores = Factorizar(m);
 
@@ -86,8 +90,6 @@ public class Factovisors {
 				} else {
 					System.out.println(m + " does not divide " + n + "!");
 				}
-			} else {
-				System.out.println(m + " does not divide " + n + "!");
 			}
 		}
 
