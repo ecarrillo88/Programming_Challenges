@@ -1,7 +1,7 @@
 /*
  * PC/UVA IDs: 110304/850
- * PC: ? / UVA: Runtime Error
- * Run Time: ?
+ * PC: ? / UVA: Accepted
+ * Run Time: 0.455
  */
 
 package tema03;
@@ -9,36 +9,40 @@ package tema03;
 import java.util.Scanner;
 
 public class CryptKicker_II {
-	private static String lineaCifrada = "xnm ceuob lrtzv ita hegfd tsmr xnm ypwq ktj";
-	private static char[] cifradoUtilizado = { 'x', 'k', 'q', 's', 'u', 'p',
-			'm', 'j', 'f', 'g', 'd', 'b', 'e', 'h', 'c', 'a', 'y', 'r', 'v',
-			'o', 'i', 'n', 'z', 't', 'l', 'w' };
-	private static char[][] texto = new char[100][];
+	private static String textoPlano = "the quick brown fox jumps over the lazy dog";
+	private static char[] cifradoUtilizado;
+	private static char[][] texto = new char[100][80];
 
 	private static boolean lineaCifradaEncontrada(int numFilas) {
-		boolean lineaEncontrada = false;
-		int i, j;
-		for (i = 0; i < numFilas; i++) {
-			// Para evitar IndexOutOfBoundsException al acceder a los caracteres
-			// de lineaCifrada tenemos que asegurarnos de que la linea a
-			// comprobar tiene el mismo tamaño que lineaCifrada
-			if ((texto[i][0] == lineaCifrada.charAt(0))
-					&& (lineaCifrada.length() == texto[i].length)) {
-				for (j = 0; j < texto[i].length; j++) {
-					if (texto[i][j] != lineaCifrada.charAt(j)) {
-						break;
+		cifradoUtilizado = new char[26];
+		for (int i = 0; i < numFilas; i++) {
+			if (textoPlano.length() == texto[i].length) {
+				// Obtenemos un posible cifrado
+				for (int j = 0; j < texto[i].length; j++) {
+					if (texto[i][j] != ' ') {
+						cifradoUtilizado[texto[i][j] - 97] = textoPlano.charAt(j);
 					}
 				}
-				// Si ha llegado al final sin romper el bucle significa que ha
-				// encontrado la linea que buscamos
-				if (j == texto[i].length) {
-					lineaEncontrada = true;
-					break;
+
+				// Desciframos la linea a partir de la cual hemos obtenido el cifrado
+				String linea = "";
+				for (int j = 0; j < texto[i].length; j++) {
+					if (texto[i][j] != ' ') {
+						linea += cifradoUtilizado[texto[i][j] - 97];
+					} else {
+						linea += ' ';
+					}
+				}
+
+				// El cifrado obtenido solo es valido si la linea descifrada es
+				// igual a la linea en texto plano que tomamos como referencia
+				if (linea.equals(textoPlano)) {
+					return true;
 				}
 			}
 		}
 
-		return lineaEncontrada;
+		return false;
 	}
 
 	private static void descrifrarTexto(int numFilas) {
@@ -48,10 +52,8 @@ public class CryptKicker_II {
 				caracter = texto[i][j];
 				// Solo se procesan los caracteres en minuscula
 				if (caracter >= 97 && caracter <= 122) {
-					// Desciframos el caracter
-					caracter = cifradoUtilizado[caracter - 97];
-					// Sustituimos por el nuevo caracter
-					texto[i][j] = caracter;
+					// Desciframos el caracter y sustituimos
+					texto[i][j] = cifradoUtilizado[caracter - 97];
 				}
 			}
 		}
@@ -76,7 +78,12 @@ public class CryptKicker_II {
 		while (numCasos-- > 0) {
 			String linea;
 			int numLineas = 0;
-			while ((linea = entrada.nextLine()) != null && !linea.isEmpty()) {
+			while (entrada.hasNextLine()) {
+				linea = entrada.nextLine();
+				if (linea.isEmpty()) {
+					break;
+				}
+
 				texto[numLineas++] = linea.toCharArray();
 			}
 
