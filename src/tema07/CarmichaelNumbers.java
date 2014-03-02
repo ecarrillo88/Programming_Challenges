@@ -1,12 +1,11 @@
 /*
  * PC/UVA IDs: 110702/10006
- * PC: Accepted / UVA: Time Limit Exceeded
- * Run Time: 4.772
+ * PC: Accepted / UVA: Accepted
+ * Run Time: 1,969
  */
 
 package tema07;
 
-import java.math.BigInteger;
 import java.util.Scanner;
 
 public class CarmichaelNumbers {
@@ -36,13 +35,23 @@ public class CarmichaelNumbers {
 
 	private static boolean esNumeroCarmichael(int n) {
 		for (int a = 2; a <= n - 1; a++) {
-			BigInteger res = BigInteger.valueOf(a).modPow(BigInteger.valueOf(n), BigInteger.valueOf(n));
-			if (!res.equals(BigInteger.valueOf(a))) {
+			if (a_Pow_n_mod_n(a, n, n) != a) {
 				return false;
 			}
 		}
-
 		return true;
+	}
+
+	private static long a_Pow_n_mod_n(long a, long m, long n) {
+		long res = 1;
+		while (m > 0) {
+			if ((m & 1) == 1) {
+				res = (res * a) % n;
+			}
+			m >>= 1;
+			a = (a * a) % n;
+		}
+		return res;
 	}
 
 	public static void main(String[] args) {
