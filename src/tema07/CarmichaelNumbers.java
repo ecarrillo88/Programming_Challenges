@@ -1,11 +1,12 @@
 /*
  * PC/UVA IDs: 110702/10006
- * PC: ? / UVA: ?
- * Run Time: ?
+ * PC: Accepted / UVA: Time Limit Exceeded
+ * Run Time: 4.772
  */
 
 package tema07;
 
+import java.math.BigInteger;
 import java.util.Scanner;
 
 public class CarmichaelNumbers {
@@ -33,22 +34,15 @@ public class CarmichaelNumbers {
 		}
 	}
 
-	private static void CarmichaelNumbers(int n) {
-
-		/*
-		 * for (int a=2; a<=n-1; a++) { if (fast_mod_pow(a,n,n) != a) { c[n] =
-		 * false; break; }
-		 */
-
-		double a;
-		if (n % 2 == 0) {
-			a = ((Math.pow(3, n / 2)) * (Math.pow(3, n / 2))) % n;
-		} else {
-			a = ((Math.pow(3, n / 2)) * (Math.pow(3, n / 2)) * (Math.pow(3, n)))
-					% n;
+	private static boolean esNumeroCarmichael(int n) {
+		for (int a = 2; a <= n - 1; a++) {
+			BigInteger res = BigInteger.valueOf(a).modPow(BigInteger.valueOf(n), BigInteger.valueOf(n));
+			if (!res.equals(BigInteger.valueOf(a))) {
+				return false;
+			}
 		}
 
-		System.out.println(a);
+		return true;
 	}
 
 	public static void main(String[] args) {
@@ -60,8 +54,11 @@ public class CarmichaelNumbers {
 			if (numerosPrimos[numero]) {
 				System.out.println(numero + " is normal.");
 			} else {
-				long a = ((long) Math.pow(2, numero)) % numero;
-				System.out.println(a);
+				if (esNumeroCarmichael(numero)) {
+					System.out.println("The number " + numero + " is a Carmichael number.");
+				} else {
+					System.out.println(numero + " is normal.");
+				}
 			}
 
 		}
