@@ -1,6 +1,6 @@
 /*
  * PC/UVA IDs: 110302/10010
- * PC: ? / UVA: Accepted
+ * PC: Accepted / UVA: Accepted
  * Run Time: 0.375
  */
 
