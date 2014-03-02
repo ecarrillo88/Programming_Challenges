@@ -1,6 +1,6 @@
 /*
  * PC/UVA IDs: 110704/10139
- * PC: ? / UVA: Runtime Error
+ * PC: Wrong Answer / UVA: Runtime Error
  * Run Time: ?
  */
 
