@@ -1,7 +1,7 @@
 /*
  * PC/UVA IDs: 110704/10139
- * PC: Wrong Answer / UVA: Runtime Error
- * Run Time: ?
+ * PC: Accepted / UVA: Runtime Error
+ * Run Time: 0.192
  */
 
 package tema07;
@@ -13,7 +13,7 @@ public class Factovisors {
 	private static long n;
 	private static long m;
 
-	// Descompone m en factores
+	/* Descompone m en factores */
 	private static ArrayList<Long> Factorizar(long n) {
 		ArrayList<Long> listaFactores = new ArrayList<Long>();
 		long num = n;
@@ -32,7 +32,7 @@ public class Factovisors {
 				listaFactores.add(cuenta);
 				num = num / cuenta;
 			} else {
-				cuenta = cuenta + 2;
+				cuenta += 2;
 			}
 		}
 
@@ -43,6 +43,7 @@ public class Factovisors {
 		return listaFactores;
 	}
 
+	/* Comprueba si m es factovidor */
 	private static boolean esFactovisor(ArrayList<Long> listaFactores) {
 		int incremento = 1;
 		for (int i = 0; i < listaFactores.size(); i += incremento) {
@@ -57,7 +58,7 @@ public class Factovisors {
 
 			int numFactorEnM = 0;
 			for (int j = i; j < listaFactores.size(); j++) {
-				if (listaFactores.get(i) != listaFactores.get(j)) {
+				if (listaFactores.get(j) != factor) {
 					break;
 				}
 				numFactorEnM++;
@@ -73,6 +74,7 @@ public class Factovisors {
 
 	public static void main(String[] args) {
 		Scanner entrada = new Scanner(System.in);
+
 		while (entrada.hasNextLine()) {
 			n = entrada.nextInt();
 			m = entrada.nextInt();
@@ -84,7 +86,6 @@ public class Factovisors {
 			} else {
 				ArrayList<Long> listaFactores = new ArrayList<Long>();
 				listaFactores = Factorizar(m);
-
 				if (esFactovisor(listaFactores)) {
 					System.out.println(m + " divides " + n + "!");
 				} else {
