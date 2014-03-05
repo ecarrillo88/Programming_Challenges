@@ -1,3 +1,9 @@
+/*
+ * PC/UVA IDs: 110306/10132
+ * PC: Accepted / UVA: Accepted
+ * Run Time: 0.178
+ */
+
 package tema03;
 
 import java.util.Scanner;
@@ -6,39 +12,57 @@ public class FileFragmentation {
 	private static int numArchivos;
 	private static int tamanoArchivo;
 	private static final int MAX_ARCHIVOS = 144;
-	private static final int MAX_TAMANO = 2048; // 256 bytes
 	private static String[] fragmentos = new String[MAX_ARCHIVOS * 2];
 
-	private static String uniFragmentos(int numFragmentos) {
-		String archivoTemporal = "";
-		for (int i = 0; i < numFragmentos; i++) {
-			for (int j = 0; j < numFragmentos; j++) {
+	private static String unirFragmentos(int numFragmentos) {
+		String archivoTemporal, archivoReconstruido = null;
+		boolean fin = false;
+		for (int i = 0; i < numFragmentos && !fin; i++) {
+			for (int j = i + 1; j < numFragmentos && !fin; j++) {
 				if (fragmentos[i].length() + fragmentos[j].length() == tamanoArchivo) {
+					// Unimos los fragmentos y comprobamos con el resto
 					archivoTemporal = fragmentos[i].concat(fragmentos[j]);
-				}
-				if (!todosFragmentosIguales(archivoTemporal, numFragmentos)) {
-					break;
+					if (comprobarRestoFragmentos(archivoTemporal, numFragmentos)) {
+						archivoReconstruido = archivoTemporal;
+						fin = true;
+						break;
+					}
+					// Unimos los fragmentos a la inversa y volvemos a comprobar
+					archivoTemporal = fragmentos[j].concat(fragmentos[i]);
+					if (comprobarRestoFragmentos(archivoTemporal, numFragmentos)) {
+						archivoReconstruido = archivoTemporal;
+						fin = true;
+					}
 				}
 			}
 		}
 
-		return archivoTemporal;
+		return archivoReconstruido;
 	}
 
-	private static boolean todosFragmentosIguales(String temp, int numFragmentos) {
+	private static boolean comprobarRestoFragmentos(String temp, int numFragmentos) {
+		int iguales = 0;
 		String archivoTemporal2 = "";
 		for (int i = 0; i < numFragmentos; i++) {
-			for (int j = 0; j < numFragmentos; j++) {
+			for (int j = i + 1; j < numFragmentos; j++) {
 				if (fragmentos[i].length() + fragmentos[j].length() == tamanoArchivo) {
 					archivoTemporal2 = fragmentos[i].concat(fragmentos[j]);
-				}
-				if (!archivoTemporal2.equals(temp)) {
-					return false;
+					if (archivoTemporal2.equals(temp)) {
+						iguales++;
+					}
+					archivoTemporal2 = fragmentos[j].concat(fragmentos[i]);
+					if (archivoTemporal2.equals(temp)) {
+						iguales++;
+					}
 				}
 			}
 		}
 
-		return true;
+		if (iguales >= numArchivos) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public static void main(String[] args) {
@@ -47,6 +71,8 @@ public class FileFragmentation {
 		String linea = entrada.nextLine(); // Linea en blanco
 
 		while (numCasos-- > 0) {
+			numArchivos = 0;
+			tamanoArchivo = 0;
 			int numFragmentos = 0;
 			while (entrada.hasNextLine()) {
 				linea = entrada.nextLine();
@@ -60,7 +86,7 @@ public class FileFragmentation {
 			numArchivos = numFragmentos / 2;
 			tamanoArchivo = tamanoArchivo / numArchivos;
 
-			System.out.println(uniFragmentos(numFragmentos));
+			System.out.println(unirFragmentos(numFragmentos));
 
 			if (numCasos > 0) {
 				System.out.print("\n");
