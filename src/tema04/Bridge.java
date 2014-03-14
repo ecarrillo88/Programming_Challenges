@@ -1,7 +1,7 @@
 /*
  * PC/UVA IDs: 110403/10037
- * PC: ? / UVA: ?
- * Run Time: ?
+ * PC: Accepted / UVA: Accepted
+ * Run Time: 0.982
  */
 
 package tema04;
@@ -15,9 +15,11 @@ public class Bridge {
 	// Al inicio suponemos que todas estan a la izquierda del puente
 	private static int[] personasIzquierda;
 	private static int[] personasDerecha;
+	private static int numIzquierda;
+	private static int numDerecha;
 	// Se utiliza para guardar el log de personas que van y vienen por el puente
 	private static ArrayList<String> log;
-	private static int costeTotal = 0;
+	private static int costeTotal;
 
 	// COUNTING SORT O(n+k)
 	private static void countingSort(int a[]) {
@@ -46,17 +48,14 @@ public class Bridge {
 	}
 
 	private static void cruzar() {
-		int ultimo = getUltimo();
+		int ultimo = ultimoIzquierda();
 		int a, b;
 		if (!todosDerecha()) {
-			if (numIzq() >= 2) {
-				a = personasIzquierda[1] + 3 * personasIzquierda[2]
-						+ personasIzquierda[ultimo];
-				b = 2 * personasIzquierda[1] + personasIzquierda[2]
-						+ personasIzquierda[ultimo - 1]
-						+ personasIzquierda[ultimo];
+			if (numIzquierda >= 2) {
+				a = personasIzquierda[1] + 3 * personasIzquierda[2] + personasIzquierda[ultimo];
+				b = 2 * personasIzquierda[1] + personasIzquierda[2] + personasIzquierda[ultimo - 1] + personasIzquierda[ultimo];
 
-				if (numIzq() == 3) {
+				if (numIzquierda == 3) {
 					cruzar(1, ultimo);
 					volverMasRapido();
 					cruzar(1, 2);
@@ -72,22 +71,24 @@ public class Bridge {
 						cruzar(1, ultimo - 1);
 						volverMasRapido();
 					}
-					if (numIzq() == 2) {
+					if (numIzquierda == 2) {
 						cruzar(1, 2);
 					}
 				}
 			} else {
-				cruzar(personasIzquierda[1]);
+				cruzarSolo(1);
 			}
 		}
 	}
 
-	private static void cruzar(int a) {
+	private static void cruzarSolo(int a) {
 		if (!todosDerecha()) {
 			int velocidad1 = 0;
 			velocidad1 = personasIzquierda[a];
 			personasDerecha[a] = velocidad1;
+			numDerecha++;
 			personasIzquierda[a] = 0;
+			numIzquierda--;
 			costeTotal += velocidad1;
 			log.add(velocidad1 + "");
 		}
@@ -99,9 +100,13 @@ public class Bridge {
 			velocidad1 = personasIzquierda[a];
 			velocidad2 = personasIzquierda[b];
 			personasDerecha[a] = velocidad1;
+			numDerecha++;
 			personasIzquierda[a] = 0;
+			numIzquierda--;
 			personasDerecha[b] = velocidad2;
+			numDerecha++;
 			personasIzquierda[b] = 0;
+			numIzquierda--;
 			costeTotal += velocidad2;
 			log.add(velocidad1 + " " + velocidad2);
 		}
@@ -120,35 +125,25 @@ public class Bridge {
 			}
 			velocidad = personasDerecha[persona];
 			personasIzquierda[persona] = velocidad;
+			numIzquierda++;
 			personasDerecha[persona] = 0;
+			numDerecha--;
 			costeTotal += velocidad;
-			log.add(velocidad + " ");
+			log.add(velocidad + "");
 		}
 	}
 
-	private static int numIzq() {
-		int aux = 0;
-		for (int i = 1; i < personasIzquierda.length; i++) {
-			aux += personasIzquierda[i] != 0 ? 1 : 0;
-		}
-		return aux;
-	}
-
-	private static int getUltimo() {
-		for (int i = personasIzquierda.length - 1; i > 0; i--) {
-			if (personasIzquierda[i] != 0)
+	private static int ultimoIzquierda() {
+		for (int i = personasIzquierda.length - 1; i >= 0; i--) {
+			if (personasIzquierda[i] != 0) {
 				return i;
+			}
 		}
 		return -1;
 	}
 
 	private static boolean todosDerecha() {
-		for (int i = 1; i < personasDerecha.length; i++) {
-			if (personasDerecha[i] == 0) {
-				return false;
-			}
-		}
-		return true;
+		return (personasDerecha.length - 1) == numDerecha;
 	}
 
 	private static void imprimirLog() {
@@ -172,6 +167,8 @@ public class Bridge {
 			// Ordenamos las personas de menor a mayor velocidad
 			countingSort(personasIzquierda);
 
+			numDerecha = 0;
+			numIzquierda = personasIzquierda.length - 1;
 			costeTotal = 0;
 			log = new ArrayList<String>();
 
@@ -181,11 +178,11 @@ public class Bridge {
 
 			System.out.println(costeTotal);
 			imprimirLog();
-			System.out.print("\n");
 
-			numCasos--;
+			if (--numCasos > 0){
+				System.out.print("\n");
+			}
 		}
-		scan.close();
 	}
 
 }
