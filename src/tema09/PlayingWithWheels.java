@@ -70,9 +70,8 @@ public class PlayingWithWheels {
 	public static void main(String[] args) {
 		Scanner entrada = new Scanner(System.in);
 		int numCasos = entrada.nextInt();
-
 		int dig1, dig2, dig3, dig4, numProhibidos;
-		while (numCasos > 0) {
+		while (numCasos-- > 0) {
 			// Inicializacion
 			colaBFS = new LinkedList<Integer>();
 			prohibidos = new boolean[10000];
