@@ -1,6 +1,6 @@
 /*
  * PC/UVA IDs: 110402/120
- * PC: Wrong Answer / UVA: Accepted.
+ * PC: Wrong Answer (Don't judge correctly) / UVA: Accepted.
  * Run Time: 0.798
  */
 
